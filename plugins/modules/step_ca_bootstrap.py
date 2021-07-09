@@ -88,7 +88,11 @@ def run_module():
             # The file probably doesn't exist yet, continue for now
             config = {}
         if config.get("fingerprint", "") == module.params["fingerprint"]:
-            result["msg"] = "Already bootstrapped and force not set"
+            result["msg"] = "Already bootstrapped and force not set."
+            module.exit_json(**result)
+        elif config.get("fingerprint", module.params["fingerprint"]) != module.params["fingerprint"]:
+            result["msg"] = "Already bootstrapped to a different CA, and force not set."
+            result["failed"] = True
             module.exit_json(**result)
 
     args = {
